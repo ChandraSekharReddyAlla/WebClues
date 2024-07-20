@@ -1,0 +1,40 @@
+#TASK-2
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-helloworld-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-helloworld
+  template:
+    metadata:
+      labels:
+        app: my-helloworld-rs
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
