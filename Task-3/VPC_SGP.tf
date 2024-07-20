@@ -62,7 +62,7 @@ resource "aws_route_table" "pbr" {
   }
 
   tags = {
-    Name = "pub_toute"
+    Name = "pub_route"
   }
 }
 
@@ -123,6 +123,6 @@ resource "aws_instance" "prvserver" {
   subnet_id  = "subnet-0e6138836b7a702f3"
 
   tags = {
-    Name = "terra-server"
+    Name = "terra-server123"
   }
 }
