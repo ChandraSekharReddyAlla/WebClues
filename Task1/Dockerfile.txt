@@ -1,2 +1,8 @@
-FROM nginx
-COPY index.html /usr/share/nginx/html
+FROM node:alphine
+RUN mkdir -p /app
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["node", "app.js"]
