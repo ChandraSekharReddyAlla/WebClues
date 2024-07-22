@@ -1,0 +1,68 @@
+
+---
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Update and upgrade apt packages
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Install Node.js
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+
+    - name: Install npm
+      ansible.builtin.apt:
+        name: npm
+        state: present
+
+    - name: Install process manager(pm2) to manage Node.js application
+      npm:
+        name: pm2
+        global: yes
+    
+    - name: install nginx
+      ansible.builtin.apt: 
+	name: nginx:latest 
+	state: present
+
+    - name: start the nginx
+      ansible.builtin.service:
+          name: nginx
+          state: started
+
+    - name: Copy Nginx configuration file
+      ansible.builtin.template:
+        src: root/default.conf.j2
+        dest: /etc/nginx/conf.d/default	
+
+    - name: Restart the Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+
+    - name: Create application directory
+      ansible.builtin.file:
+        path: /var/www/index
+        state: directory
+
+    - name: Uploading the application files
+      ansible.builtin.copy:
+        src: /root/
+        dest: /var/www/index
+        
+    - name: Start Node.js application using pm2
+      command: pm2 start /var/www/your_app/server.js --name nodejs
+
+    - name: Save pm2 process list
+      command: pm2 save
+
+    - name: Ensure pm2 startup script runs on boot
+      command: pm2 startup systemd -u devops --hp /home/devops
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
