@@ -1,5 +1,3 @@
-i. Create a Terraform script to provision an ec2 instance with necessary security group and VPC configurations.
-
 provider "aws" {
   region     = "us-east-1"
 }
@@ -92,13 +90,6 @@ resource "aws_security_group" "main" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
